@@ -28,6 +28,17 @@ module.exports = (sequelize) => {
             email: {
                 type: DataTypes.STRING(65),
                 allowNull: false,
+                unique: true,
+            },
+            password_reset_token: {
+                type: DataTypes.STRING,
+                allowNull: true,
+                select: false,
+            },
+            token_expires_at: {
+                type: DataTypes.DATE,
+                allowNull: true,
+                defaultValue: DataTypes.NOW
             },
             data_cadastro: {
                 type: DataTypes.DATE,

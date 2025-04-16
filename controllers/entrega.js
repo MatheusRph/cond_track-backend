@@ -2,7 +2,7 @@
 const { response } = require('express');
 
 // Importa o modelo de Entrega
-const { Entrega, User } = require('../models');
+const { Entrega, User } = require('../models/index.js');
 
 // Exporta a função getEntregas
 exports.getEntregas = async (req, res) => {
@@ -44,14 +44,21 @@ exports.registerEntrega = async (req, res) => {
     try {
 
         // Obtém os dados do corpo da requisição
-        const { ramal, responsavel } = req.body;
+        const { ramal, responsavel, item } = req.body;
 
         // Verifica se o ramal e o responsável foram informados
         if (!ramal || !responsavel) {
             return res.status(400).json({
                 success: false,
-                response: 'Informe o ramal e o responsável da entrega'
+                response: 'Informe o ramal e o responsável à receber'
             });
+        }
+
+        if(!item){
+            return res.status(400).json({
+                success: false,
+                response: 'Informe o item a ser entregue'
+                });
         }
 
         // Busca o usuário pelo ramal
@@ -61,13 +68,12 @@ exports.registerEntrega = async (req, res) => {
         if (!user) {
             return res.status(400).json({
                 success: false,
-                response: 'Ramal não encontrado'
+                response: 'Ramal inválido'
             });
-
         }
 
         // Cria uma nova entrega
-        const entrega = await Entrega.create({ ramal_id: user.id, responsavel: responsavel })
+        const entrega = await Entrega.create({ ramal_id: user.id, responsavel: responsavel, item: item })
 
         // Verifica se a entrega foi criada com sucesso
         if (!entrega) {
@@ -82,8 +88,8 @@ exports.registerEntrega = async (req, res) => {
             success: true,
             response: 'Entrega registrada com sucesso'
         });
-        
     }
+
     // Captura e trata erros
     catch (error) {
         // Registra o erro no console

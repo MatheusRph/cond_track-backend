@@ -1,4 +1,4 @@
-const { User, Suggestion } = require('../models');
+const { User, Suggestion } = require('../models/index.js');
 
 exports.createSuggestions = async (req, res) => {
     // Verifica se o corpo da requisição contém a mensagem

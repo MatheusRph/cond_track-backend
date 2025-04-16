@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt')
 
-const salt = 6;
+const salt = 12;
 
 module.exports.encrypting = async (password) =>{
     const saltGenerated = await bcrypt.genSalt(salt);

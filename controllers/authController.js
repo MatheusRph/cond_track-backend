@@ -1,5 +1,5 @@
 // Importação do modelo de usuário e das funções de criptografia
-const { User } = require('../models');
+const { User } = require('../models/index.js');
 const { verifyEncrypt, encrypting } = require('../utils/encrypt.js');
 
 // Função de login do usuário
@@ -94,6 +94,9 @@ exports.register = async (req, res) => {
             }
         });
 
+        if (await User.findOne({ where: { ramal: ramal } })) {
+            return res.status(400).send('O email já está em uso!');
+        }
         // Verifica se o usuário já existe
         if (user) {
             // Se o usuário já existe, retorna uma resposta com sucesso falso
@@ -137,31 +140,4 @@ exports.register = async (req, res) => {
             response: 'Erro ao processar sua solicitação. Por favor, tente novamente.'
         });
     }
-}
-
-exports.recovery = async (req, res) => {
-    const { email } = req.body;
-
-    if (!email) {
-        return res.status(400).json({
-            success: false,
-            response: 'O campo e-mail é obrigatório'
-        });
-    }
-
-    const ramal = req.session.user.ramal
-
-    const user = await User.findOne({ where: { id: req.session.user.id || ramal } });
-
-    if (!user) {
-        return res.status(404).json({
-            success: false,
-            response: 'Deslogue e logue novamente'
-        });
-    }
-
-    const sendEmail = await sendRecoveryEmail(email, user.ramal)
-
-    res.status(response.success ? 200 : 500).json(response);
-
 }

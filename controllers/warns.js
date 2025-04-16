@@ -1,5 +1,5 @@
 // Importação otimizada de modelos de Aviso e User
-const { Aviso, User } = require('../models');
+const { Aviso, User } = require('../models/index.js');
 
 // Exporta a função getWarns para obter todos os avisos
 exports.getWarns = async (req, res) => {

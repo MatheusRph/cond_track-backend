@@ -22,6 +22,10 @@ module.exports = (sequelize) => {
                     key: 'id',
                 }
             },
+            item: {
+                type: DataTypes.STRING(50),
+                allowNull: false
+            },
             responsavel: {
                 type: DataTypes.STRING(50),
                 allowNull: false,
@@ -29,6 +33,7 @@ module.exports = (sequelize) => {
             data_entrega: {
                 type: DataTypes.DATE,
                 allowNull: false,
+                defaultValue: DataTypes.NOW,
             },
             data_concluido: {
                 type: DataTypes.DATE,
@@ -41,7 +46,7 @@ module.exports = (sequelize) => {
         {
             sequelize,
             modelName: 'Entrega', 
-            tableName: 'entregas', 
+            tableName: 'entrega', 
             timestamps: false 
         }
     );

@@ -1,9 +1,8 @@
-import SibApiV3Sdk from 'sib-api-v3-sdk';
-const jwt = require('jsonwebtoken');
+const SibApiV3Sdk = require('sib-api-v3-sdk');
 const dotenv = require('dotenv').config();
-const { SENDINBLUE_API_TOKEN, SENDER_EMAIL, SENDER_NAME} = process.env;
+const { SENDINBLUE_API_TOKEN, SENDER_EMAIL, SENDER_NAME } = process.env;
 
-// Configs da api do BREVO
+// Configurações da API do Brevo
 const client = SibApiV3Sdk.ApiClient.instance;
 const apiKey = client.authentications['api-key'];
 apiKey.apiKey = SENDINBLUE_API_TOKEN;
@@ -19,16 +18,14 @@ const sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail();
  * @description Esta função é responsável por enviar um e-mail de recuperação de senha para o usuário.
  * @param {String} to - E-mail do destinatário
  * @param {String} ramal - Nome do destinatário
+ * @param {String} code - Código de recuperação
+ * @param {Object} res - Objeto de resposta do Express
  */
+exports.sendRecoveryEmail = async (to, ramal, code, res) => {
 
-exports.sendRecoveryEmail = async (to, ramal, res) => {
-    // Gera um código de recuperação aleatório
-    const gencode = Math.floor(100000 + Math.random() * 900000);
-    // Assina o código com um token JWT
-    const code = jwt.sign({ gencode }, process.env.SECRET_KEY, { expiresIn: '10m' });
 
     // Configura o destinatário do e-mail
-    sendSmtpEmail.to = [{ email: to, name: ramal }];
+    sendSmtpEmail.to = [{ email: to }];
     // Configura o remetente do e-mail
     sendSmtpEmail.sender = { email: SENDER_EMAIL, name: SENDER_NAME };
     // Configura o assunto do e-mail
@@ -37,14 +34,15 @@ exports.sendRecoveryEmail = async (to, ramal, res) => {
     sendSmtpEmail.htmlContent = `<p>O código para recuperar sua senha é ${code}</p>`;
 
     try {
-        // Envia o e-mail
-        apiInstance.sendTransacEmail(sendSmtpEmail)
-            .then(response => console.log("E-mail enviado:", response))
-            .catch(error => console.error("Erro ao enviar:", error));
+        // Envia o e-mail e aguarda a resposta
+        const response = await apiInstance.sendTransacEmail(sendSmtpEmail);
+        console.log("E-mail enviado:", response);
+        // Resposta para o cliente indicando sucesso
+        res.status(200).send({ message: 'E-mail de recuperação enviado com sucesso.' });
     } catch (error) {
         // Trata erros internos do servidor
-        console.log('Erro interno do servidor:', error);
+        console.error('Erro ao enviar o e-mail:', error);
         // Retorna uma resposta de erro para o cliente
-        res.status(500).send({ message: 'Erro interno do servidor' });
+        res.status(500).send({ message: 'Erro interno ao enviar e-mail de recuperação.' });
     }
 };

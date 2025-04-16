@@ -1,11 +1,11 @@
-const sequelize = require('../config/sequelize'); // Importando a conexão com o banco
+const sequelize = require('../config/sequelize.js'); // Importando a conexão com o banco
 const { DataTypes } = require('sequelize');
 
 // Importando os modelos
-const User = require('./users')(sequelize, DataTypes);
-const Suggestion = require('./suggestions')(sequelize, DataTypes);
-const Aviso = require('./warns')(sequelize, DataTypes);
-const Entrega = require('./entregas')(sequelize, DataTypes);
+const User = require('./users.js')(sequelize, DataTypes);
+const Suggestion = require('./suggestions.js')(sequelize, DataTypes);
+const Aviso = require('./warns.js')(sequelize, DataTypes);
+const Entrega = require('./entregas.js')(sequelize, DataTypes);
 
 // 🔗 Definição das associações
 User.hasMany(Suggestion, { foreignKey: 'ramal_id', as: 'suggestions' });

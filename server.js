@@ -1,10 +1,10 @@
 // Importando o módulo do express
 const express = require('express');
-const sequelize = require('./config/sequelize');
-const router = require('./routes/router');
+const sequelize = require('./config/sequelize.js');
+const router = require('./routes/router.js');
 const cors = require('cors')
 const session = require('express-session');
-const dotenv = require('dotenv').config();
+const dotenv = require('dotenv').config(); 
 const { SESSION_TOKEN } = process.env;
 
 // require('dotenv').config();
@@ -65,19 +65,6 @@ const PORT = process.env.PORT || 3000;
 
 // Iniciando o servidor e ouvindo a porta especificada
 
-const getLocalIP = () => {
-    const os = require('os');
-    const interfaces = os.networkInterfaces();
-    for (const interfaceName in interfaces) {
-        for (const iface of interfaces[interfaceName]) {
-            if (iface.family === 'IPv4' && !iface.internal) {
-                return iface.address; // Retorna o primeiro IP válido encontrado
-            }
-        }
-    }
-    return 'localhost'; // Retorno padrão se não encontrar outro IP
-};
-
-app.listen(PORT, getLocalIP(), () => {
-    console.log(`Servidor Express iniciado!\x1b[36;5;4mhttp://${getLocalIP()}:${PORT}\x1b[0m`);
+app.listen(PORT, () => {
+    console.log(`Servidor Express iniciado!\x1b[36;5;4mhttp://localhost:${PORT}\x1b[0m`);
 });

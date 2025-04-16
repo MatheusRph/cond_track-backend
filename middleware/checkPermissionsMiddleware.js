@@ -1,4 +1,4 @@
-const { User } = require('../models');
+const { User } = require('../models/index.js');
 
 //Começo de uma verificação por cargo bem mais complexa, do que precisa -se para este tipo de app
 // const checkPermissions = (req, res, perm, next) => {
